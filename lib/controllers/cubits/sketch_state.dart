@@ -23,6 +23,24 @@ abstract class SketchState extends Equatable {
   @override
   List<Object?> get props =>
       [points, color, brushType, brushSize, strokeWidth, history];
+
+  SketchState copyWith({
+    List<Offset>? points,
+    Color? color,
+    BrushType? brushType,
+    double? brushSize,
+    double? strokeWidth,
+    List<List<Offset>>? history,
+  }) {
+    return DrawingSketchState(
+      points: points ?? this.points,
+      color: color ?? this.color,
+      brushType: brushType ?? this.brushType,
+      brushSize: brushSize ?? this.brushSize,
+      strokeWidth: strokeWidth ?? this.strokeWidth,
+      history: history ?? this.history,
+    );
+  }
 }
 
 class SketchInitial extends SketchState {
