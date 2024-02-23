@@ -21,7 +21,7 @@ class SketchCubit extends Cubit<SketchState> {
 
   void undo() {
     if (state.history.isEmpty) return;
-    final previousPoints = state.history.removeLast();
+    final previousPoints = state.history.last;
     emit(DrawingSketchState(
       points: state.points
           .where((element) => !previousPoints.contains(element))

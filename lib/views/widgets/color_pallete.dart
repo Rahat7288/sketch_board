@@ -16,6 +16,9 @@ class ColorPalette extends StatelessWidget {
         bottom: 20,
         right: 20,
         child: ColorPicker(
+          colorPickerWidth: 100,
+          enableAlpha: false,
+          showLabel: false,
           pickerColor: color,
           onColorChanged: onColorChanged,
         ));
