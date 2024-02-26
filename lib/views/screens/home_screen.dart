@@ -23,7 +23,7 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
           body: Padding(
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
             child: GestureDetector(
               onPanDown: (details) =>
                   context.read<SketchCubit>().addPoint(details.localPosition),
@@ -56,49 +56,6 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
-
-          //   Stack(
-          //   children: [
-          //     GestureDetector(
-          //       onPanDown: (details) =>
-          //           context.read<SketchCubit>().addPoint(details.localPosition),
-          //       onPanUpdate: (details) =>
-          //           context.read<SketchCubit>().addPoint(details.localPosition),
-          //       child: SizedBox(
-          //         height: 700,
-          //         width: 300,
-          //         child: RepaintBoundary(
-          //           key: UniqueKey(),
-          //           child: CustomPaint(
-          //             painter: SketchPainter(
-          //               points: state.points,
-          //               color: state.color,
-          //               brushType: state.brushType,
-          //               brushSize: state.brushSize,
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //     SizedBox(
-          //       height: 500,
-          //       width: 200,
-          //       child: ColorPalette(
-          //         color: state.color,
-          //         onColorChanged: (Color value) =>
-          //             context.read<SketchCubit>().setColor(value),
-          //       ),
-          //     ),
-          //     BrushPalette(
-          //       brushType: state.brushType,
-          //       brushSize: state.brushSize,
-          //       onBrushTypeChanged: (BrushType value) =>
-          //           context.read<SketchCubit>().setBrushType(value),
-          //       onBrushSizeChanged: (double value) =>
-          //           context.read<SketchCubit>().setBrushSize(value),
-          //     ),
-          //   ],
-          // );
 
           floatingActionButton: Container(
             width: MediaQuery.of(context).size.width,

@@ -7,7 +7,16 @@ part 'sketch_state.dart';
 class SketchCubit extends Cubit<SketchState> {
   SketchCubit() : super(SketchInitial());
 
+  bool _isDrawing = false;
+  List<Offset> _currentPoints = [];
+
   void addPoint(Offset point) {
+    // if (_isDrawing) {
+    //   _isDrawing = true;
+    //   _currentPoints.clear();
+    // }
+    // _currentPoints.add(point);
+    // emit(DrawingSketchState([...state.points, ..._currentPoints]));
     emit(
       DrawingSketchState(
           points: state.points..add(point),
