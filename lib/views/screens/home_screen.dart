@@ -22,32 +22,35 @@ class HomeScreen extends StatelessWidget {
                   bName: 'Save', bWidth: 120, bColor: AppColor.saveButtonColor),
             ],
           ),
-          body: GestureDetector(
-            onPanDown: (details) =>
-                context.read<SketchCubit>().addPoint(details.localPosition),
-            onPanUpdate: (details) =>
-                context.read<SketchCubit>().addPoint(details.localPosition),
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              margin: const EdgeInsets.all(2),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: 1,
-                  color: Colors.black,
-                  style: BorderStyle.solid,
+          body: Padding(
+            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+            child: GestureDetector(
+              onPanDown: (details) =>
+                  context.read<SketchCubit>().addPoint(details.localPosition),
+              onPanUpdate: (details) =>
+                  context.read<SketchCubit>().addPoint(details.localPosition),
+              child: Container(
+                height: MediaQuery.of(context).size.height / 1.4,
+                width: MediaQuery.of(context).size.width,
+                margin: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    width: 1,
+                    color: Colors.black,
+                    style: BorderStyle.solid,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              // color: Colors.green,
-              child: RepaintBoundary(
-                key: UniqueKey(),
-                child: CustomPaint(
-                  painter: SketchPainter(
-                    points: state.points,
-                    color: state.color,
-                    brushType: state.brushType,
-                    brushSize: state.brushSize,
+                // color: Colors.green,
+                child: RepaintBoundary(
+                  key: UniqueKey(),
+                  child: CustomPaint(
+                    painter: SketchPainter(
+                      points: state.points,
+                      color: state.color,
+                      brushType: state.brushType,
+                      brushSize: state.brushSize,
+                    ),
                   ),
                 ),
               ),
@@ -97,34 +100,44 @@ class HomeScreen extends StatelessWidget {
           //   ],
           // );
 
-          floatingActionButton: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              FloatingActionButton(
-                onPressed: () {
-                  context.read<SketchCubit>().undo();
-                },
-                child: Icon(Icons.undo),
-              ),
-              FloatingActionButton(
-                onPressed: () {
-                  context.read<SketchCubit>().redo();
-                },
-                child: Icon(Icons.redo),
-              ),
-              FloatingActionButton(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext buildContext) => ToolsMenu(
-                            state: state,
-                          ));
-                },
-                child: Center(
-                  child: Icon(Icons.palette),
+          floatingActionButton: Container(
+            width: MediaQuery.of(context).size.width,
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FloatingActionButton(
+                  onPressed: () {
+                    context.read<SketchCubit>().undo();
+                  },
+                  child: const Icon(Icons.undo),
                 ),
-              ),
-            ],
+                const SizedBox(
+                  width: 10,
+                ),
+                FloatingActionButton(
+                  onPressed: () {
+                    context.read<SketchCubit>().redo();
+                  },
+                  child: const Icon(Icons.redo),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                FloatingActionButton(
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext buildContext) => ToolsMenu(
+                              state: state,
+                            ));
+                  },
+                  child: const Center(
+                    child: Icon(Icons.palette),
+                  ),
+                ),
+              ],
+            ),
           ),
           // bottomSheet: Container(
           //   height: 60,
