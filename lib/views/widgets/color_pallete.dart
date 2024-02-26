@@ -12,15 +12,14 @@ class ColorPalette extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-        bottom: 20,
-        right: 20,
-        child: ColorPicker(
-          colorPickerWidth: 100,
-          enableAlpha: false,
-          showLabel: false,
-          pickerColor: color,
-          onColorChanged: onColorChanged,
-        ));
+    return ColorPicker(
+      colorPickerWidth: 200,
+      pickerAreaBorderRadius: BorderRadius.circular(100),
+      paletteType: PaletteType.hsv,
+      enableAlpha: false,
+      showLabel: false,
+      pickerColor: color,
+      onColorChanged: onColorChanged,
+    );
   }
 }

@@ -1,70 +1,137 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sketch_board/controllers/constants/app_color.dart';
 
 import '../../controllers/cubits/sketch_cubit.dart';
-import '../widgets/brush_palette.dart';
-import '../widgets/color_pallete.dart';
+import '../widgets/alert_dialogs/tools_alert.dart';
+import '../widgets/buttons/icon_button_with_button_name.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Sketch Screen"),
-      ),
-      body: BlocBuilder<SketchCubit, SketchState>(
-        builder: (BuildContext context, state) {
-          return Stack(
-            children: [
-              GestureDetector(
-                onPanDown: (details) =>
-                    context.read<SketchCubit>().addPoint(details.localPosition),
-                onPanUpdate: (details) =>
-                    context.read<SketchCubit>().addPoint(details.localPosition),
-                child: SizedBox(
-                  height: 700,
-                  width: 300,
-                  child: RepaintBoundary(
-                    key: UniqueKey(),
-                    child: CustomPaint(
-                      painter: SketchPainter(
-                        points: state.points,
-                        color: state.color,
-                        brushType: state.brushType,
-                        brushSize: state.brushSize,
-                      ),
-                    ),
+    return BlocBuilder<SketchCubit, SketchState>(
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text("Sketch Screen"),
+            centerTitle: false,
+            actions: [
+              iconButtonWithName(
+                  bName: 'Save', bWidth: 120, bColor: AppColor.saveButtonColor),
+            ],
+          ),
+          body: GestureDetector(
+            onPanDown: (details) =>
+                context.read<SketchCubit>().addPoint(details.localPosition),
+            onPanUpdate: (details) =>
+                context.read<SketchCubit>().addPoint(details.localPosition),
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 1,
+                  color: Colors.black,
+                  style: BorderStyle.solid,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              // color: Colors.green,
+              child: RepaintBoundary(
+                key: UniqueKey(),
+                child: CustomPaint(
+                  painter: SketchPainter(
+                    points: state.points,
+                    color: state.color,
+                    brushType: state.brushType,
+                    brushSize: state.brushSize,
                   ),
                 ),
               ),
-              SizedBox(
-                height: 500,
-                width: 200,
-                child: ColorPalette(
-                  color: state.color,
-                  onColorChanged: (Color value) =>
-                      context.read<SketchCubit>().setColor(value),
+            ),
+          ),
+
+          //   Stack(
+          //   children: [
+          //     GestureDetector(
+          //       onPanDown: (details) =>
+          //           context.read<SketchCubit>().addPoint(details.localPosition),
+          //       onPanUpdate: (details) =>
+          //           context.read<SketchCubit>().addPoint(details.localPosition),
+          //       child: SizedBox(
+          //         height: 700,
+          //         width: 300,
+          //         child: RepaintBoundary(
+          //           key: UniqueKey(),
+          //           child: CustomPaint(
+          //             painter: SketchPainter(
+          //               points: state.points,
+          //               color: state.color,
+          //               brushType: state.brushType,
+          //               brushSize: state.brushSize,
+          //             ),
+          //           ),
+          //         ),
+          //       ),
+          //     ),
+          //     SizedBox(
+          //       height: 500,
+          //       width: 200,
+          //       child: ColorPalette(
+          //         color: state.color,
+          //         onColorChanged: (Color value) =>
+          //             context.read<SketchCubit>().setColor(value),
+          //       ),
+          //     ),
+          //     BrushPalette(
+          //       brushType: state.brushType,
+          //       brushSize: state.brushSize,
+          //       onBrushTypeChanged: (BrushType value) =>
+          //           context.read<SketchCubit>().setBrushType(value),
+          //       onBrushSizeChanged: (double value) =>
+          //           context.read<SketchCubit>().setBrushSize(value),
+          //     ),
+          //   ],
+          // );
+
+          floatingActionButton: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FloatingActionButton(
+                onPressed: () {
+                  context.read<SketchCubit>().undo();
+                },
+                child: Icon(Icons.undo),
+              ),
+              FloatingActionButton(
+                onPressed: () {
+                  context.read<SketchCubit>().redo();
+                },
+                child: Icon(Icons.redo),
+              ),
+              FloatingActionButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext buildContext) => ToolsMenu(
+                            state: state,
+                          ));
+                },
+                child: Center(
+                  child: Icon(Icons.palette),
                 ),
               ),
-              BrushPalette(
-                brushType: state.brushType,
-                brushSize: state.brushSize,
-                onBrushTypeChanged: (BrushType value) =>
-                    context.read<SketchCubit>().setBrushType(value),
-                onBrushSizeChanged: (double value) =>
-                    context.read<SketchCubit>().setBrushSize(value),
-              ),
             ],
-          );
-        },
-      ),
+          ),
+          // bottomSheet: Container(
+          //   height: 60,
+          //   color: Colors.green,
+          // ),
+        );
+      },
     );
   }
 }
