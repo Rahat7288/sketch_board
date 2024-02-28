@@ -7,40 +7,56 @@ part 'sketch_state.dart';
 class SketchCubit extends Cubit<SketchState> {
   SketchCubit() : super(SketchInitial());
 
-  bool _isDrawing = false;
   List<Offset> _currentPoints = [];
 
   void addPoint(Offset point) {
-    // if (_isDrawing) {
-    //   _isDrawing = true;
-    //   _currentPoints.clear();
-    // }
-    // _currentPoints.add(point);
-    // emit(DrawingSketchState([...state.points, ..._currentPoints]));
+    final points = List<Offset>.from(state.points)..add(point);
+    // debugPrint("my first points=========${points.first}");
+    // final history = state.history..add(points);
+    //
+    // debugPrint("my points hoistory are $history./n");
+
     emit(
       DrawingSketchState(
-          points: state.points..add(point),
+          points: points,
           color: state.color,
           brushType: state.brushType,
           brushSize: state.brushSize,
           strokeWidth: state.strokeWidth,
           history: [...state.history, state.points]),
     );
+
+    // if (point == state.points.last) return;
+    // _isDrawing = true;
+  }
+
+  // void updatePoints(Offset point) {
+  //   final List<List<Offset>> newState = List.from(state.history);
+  //   newState.last.add(point);
+  //   emit(DrawingSketchState(
+  //     points: state.points,
+  //     color: state.color,
+  //     brushType: state.brushType,
+  //     brushSize: state.brushSize,
+  //     strokeWidth: state.strokeWidth,
+  //     history: [...state.history, state.points],
+  //   ));
+  // }
+
+  void stopDrawing() {
+    if (state.points.isNotEmpty) {
+      debugPrint("My  last points are ${state.points.last}\n");
+      emit(state.copyWith(history: [...state.history, state.points]));
+    }
   }
 
   void undo() {
     if (state.history.isEmpty) return;
-    final previousPoints = state.history.last;
-    emit(DrawingSketchState(
-      points: state.points
-          .where((element) => !previousPoints.contains(element))
-          .toList(),
-      color: state.color,
-      brushType: state.brushType,
-      brushSize: state.brushSize,
-      strokeWidth: state.strokeWidth,
-      history: state.history,
-    ));
+
+    final newPoints = state.history.removeLast();
+    emit(state.copyWith(
+        points: newPoints,
+        history: state.history.sublist(0, state.history.length - 1)));
   }
 
   void redo() {

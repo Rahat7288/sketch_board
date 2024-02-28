@@ -25,10 +25,16 @@ class HomeScreen extends StatelessWidget {
           body: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
             child: GestureDetector(
-              onPanDown: (details) =>
-                  context.read<SketchCubit>().addPoint(details.localPosition),
-              onPanUpdate: (details) =>
-                  context.read<SketchCubit>().addPoint(details.localPosition),
+              // onPanStart: (offsets) =>
+              //     context.read<SketchCubit>().addPoint(offsets.localPosition),
+              onPanUpdate: (offsets) {
+                final renderBox = context.findRenderObject() as RenderBox;
+                final localPosition =
+                    renderBox.globalToLocal(offsets.globalPosition);
+                context.read<SketchCubit>().addPoint(localPosition);
+              },
+              onPanDown: (offsets) => context.read<SketchCubit>().stopDrawing(),
+              onPanEnd: (offsets) => context.read<SketchCubit>().stopDrawing(),
               child: Container(
                 height: MediaQuery.of(context).size.height / 1.4,
                 width: MediaQuery.of(context).size.width,
@@ -108,6 +114,7 @@ class HomeScreen extends StatelessWidget {
 
 class SketchPainter extends CustomPainter {
   final List<Offset> points;
+  // final List<List<Offset>> paths;
   final Color color;
   final BrushType brushType;
   final double brushSize;
@@ -136,5 +143,8 @@ class SketchPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(SketchPainter oldDelegate) => true;
+  bool shouldRepaint(SketchPainter oldDelegate) => points != oldDelegate.points;
+
+  // @override
+  // bool shouldRebuildSemantics(SketchPainter oldDelegate) => true;
 }
